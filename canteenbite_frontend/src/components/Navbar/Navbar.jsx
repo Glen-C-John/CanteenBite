@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./Navbar.css"
 import { assets } from '../../assets/assets'
 const Navbar = () => {
-    
+
+    const [menu,setMenu] = useState("home");
+
   return (
     <div className='navbar'>
         <h1>CanteenBites</h1>
       <ul className='navbar-menu'>
-        <li>Home</li>
-        <li>Menu</li>
-        <li>contact us</li>
-        <li>mobile app</li>
+        <li onClick={()=>setMenu ("home" )} className={menu==="home" ?"active": ""}>Home</li>
+        <li onClick={()=>setMenu ("menu" )} className={menu==="menu" ?"active": ""}>Menu</li>
+        <li onClick={()=>setMenu ("contact-us" )} className={menu==="contact-us" ?"active": ""}>contact us</li>
+        <li onClick={()=>setMenu ("mobile-app" )} className={menu==="mobile-app" ?"active": ""}>mobile app</li>
       </ul>
       <div className='navbar-right'>
         <img src={assets.search_icon} alt="" />
@@ -25,3 +27,6 @@ const Navbar = () => {
 }
 
 export default Navbar
+
+
+
