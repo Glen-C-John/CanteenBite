@@ -5,7 +5,8 @@
     justify-content: space-between;
     align-items: center;
 }
-.navbar .h1{
+.navbar h1{
+    color: tomato;
     width: 150px;
 }
 .navbar-menu{
