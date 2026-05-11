@@ -11,7 +11,7 @@
 
 .explore-menu-text{
     max-width: 60%;
-    columns: #808080;
+    color: var(--color-text-muted);
 }
 
 .explore-menu-list{
@@ -37,7 +37,7 @@
 }
 .explore-menu-list-items p{
     margin-top: 10px;
-    color: #747474;
+    color: var(--color-text-muted);
     font-size: max(1.4vw,16px);
     cursor: pointer;
 }
@@ -50,8 +50,9 @@
 }
 
 .explore-menu-list-items .active{
-    border: 4px solid tomato;
+    border: 4px solid var(--color-primary);
     padding: 2px;
+    border-radius: 50%;
 }
 
 @media (max-width:1050px) {

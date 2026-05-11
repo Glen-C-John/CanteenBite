@@ -1,10 +1,18 @@
 import React from 'react'
 import './ExploreMenu.css'
 import { menu_list } from '../../assets/assets'
+import { motion } from 'framer-motion'
 
 const ExploreMenu = ({category,setCategory}) => {
   return (
-    <div className='explore-menu' id='explore-menu'>
+    <motion.div 
+      className='explore-menu' 
+      id='explore-menu'
+      initial={{ opacity: 0, x: -50 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
         <h1>Explore our menu</h1>
         <p className='explore-menu-text'>Choose from a diverse menu featuring a delectable array of dishes. Our mission is is to satisfy your cravings and elevate your dining experience, one delicious meal at a time.</p>
         <div className="explore-menu-list">
@@ -18,7 +26,7 @@ const ExploreMenu = ({category,setCategory}) => {
             })}
         </div>
         <hr />
-    </div>
+    </motion.div>
   )
 }
 
