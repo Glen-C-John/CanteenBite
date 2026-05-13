@@ -3,6 +3,7 @@ import './PlaceOrder.css';
 import { StoreContext } from '../../context/StoreContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const PlaceOrder = () => {
     const { getTotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext);
@@ -63,7 +64,13 @@ const PlaceOrder = () => {
     }, [token]);
 
     return (
-        <form onSubmit={placeOrder} className='place-order'>
+        <motion.form 
+            onSubmit={placeOrder} 
+            className='place-order'
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             <div className="place-order-left">
                 <p className="title">Delivery Information</p>
                 <div className="multi-fields">
@@ -105,7 +112,7 @@ const PlaceOrder = () => {
                     <button type='submit'>PROCEED TO PAYMENT</button>
                 </div>
             </div>
-        </form>
+        </motion.form>
     )
 }
 
