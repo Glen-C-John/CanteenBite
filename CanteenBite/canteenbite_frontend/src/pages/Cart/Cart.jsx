@@ -1,14 +1,21 @@
 import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Cart.css'
 import { StoreContext } from '../../context/StoreContext'
-
+import { motion } from 'framer-motion'
 
 const Cart = () => {
 
   const { cartItems, food_list, removeFromCart, getTotalCartAmount,url } = useContext(StoreContext);
+  const navigate = useNavigate();
 
   return (
-    <div className='cart'>
+    <motion.div 
+      className='cart'
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="cart-items">
         <div className="cart-items-title">
           <p>Items</p>
@@ -23,7 +30,12 @@ const Cart = () => {
         {food_list.map((item, index) => {
           if (cartItems[item._id] > 0) {
             return (
-              <div>
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
                 <div className="cart-items-title cart-items-item">
                   <img src={url+"/images/"+item.image} alt="" />
                   <p>{item.name}</p>
@@ -33,7 +45,7 @@ const Cart = () => {
                   <p onClick={() => removeFromCart(item._id)} className='cross'>x</p>
                 </div>
                 <hr />
-              </div>
+              </motion.div>
 
             )
           }
@@ -58,7 +70,7 @@ const Cart = () => {
               <b>₹{getTotalCartAmount()+2}</b>
             </div>
           </div>
-          <button>PROCEED TO CHECKOUT</button>
+          <button onClick={() => navigate('/order')}>PROCEED TO CHECKOUT</button>
         </div>
         <div className='cart-promocode'>
           <div>
@@ -70,7 +82,7 @@ const Cart = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
