@@ -3,6 +3,7 @@ import './LoginPopup.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../../context/StoreContext'
 import axios from 'axios'
+import { motion } from 'framer-motion'
 
 const LoginPopup = ({setShowLogin}) => {
 
@@ -46,7 +47,13 @@ const LoginPopup = ({setShowLogin}) => {
 
   return (
     <div className='login-popup'>
-      <form onSubmit={onLogin}  className="login-popup-container">
+      <motion.form 
+        onSubmit={onLogin}  
+        className="login-popup-container"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
         <div className="login-popup-title">
             <h2>{currState}</h2>
             <img onClick={()=>setShowLogin(false)}  src={assets.cross_icon} alt="" />
@@ -66,7 +73,7 @@ const LoginPopup = ({setShowLogin}) => {
         :<p>Already have an account? <span onClick={()=>setCurrState("Login")}>Login here</span></p>
         }
         
-      </form>
+      </motion.form>
     </div>
   )
 }
