@@ -1,6 +1,6 @@
 .footer{
     color: #d9d9d9;
-    background-color: #323232;
+    background-color: var(--color-text);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,7 +10,7 @@
 }
 
 .footer-content-left h1 {
-    color: tomato;
+    color: var(--color-primary);
 }
 
 .footer-content{

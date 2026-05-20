@@ -2,9 +2,16 @@
     width: 100%;
     margin: auto;
     border-radius: 15px;
-    box-shadow: 0px 0px 10px #00000015;
-    transition: 0.3s;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.04);
+    background: white;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     animation: fadeIn 1s;
+}
+
+.food-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0px 15px 30px rgba(99, 102, 241, 0.15);
 }
 
 .food-item-image{
@@ -38,7 +45,7 @@
 }
 
 .food-item-price{
-    color: tomato;
+    color: var(--color-primary);
     font-size: 22px;
     font-weight: 500;
     margin: 10px 0px;
