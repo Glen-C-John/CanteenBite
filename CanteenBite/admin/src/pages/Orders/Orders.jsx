@@ -3,6 +3,7 @@ import './Orders.css'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { assets } from '../../assets/assets'
+import { motion } from 'framer-motion'
 
 const Orders = ({ url }) => {
   const [orders, setOrders] = useState([]);
@@ -45,7 +46,13 @@ const Orders = ({ url }) => {
       <h3>Order Page</h3>
       <div className="order-list">
         {orders.map((order, index) => (
-          <div key={index} className='order-item'>
+          <motion.div 
+            key={index} 
+            className='order-item'
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+          >
             <img src={assets.parcel_icon} alt="parcel" />
             <div>
               <p className='order-item-food'>
@@ -84,7 +91,7 @@ const Orders = ({ url }) => {
               <option value="Out for delivery">Out for delivery</option>
               <option value="Delivered">Delivered</option>
             </select>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

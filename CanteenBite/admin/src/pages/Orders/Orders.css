@@ -3,11 +3,20 @@
     grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr;
     align-items: start;
     gap: 30px;
-    border: 1px solid tomato;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.06);
+    transition: 0.3s ease;
     padding: 20px;
     margin: 30px 0px;
     font-size: 14px;
-    color: #505050;
+    color: var(--color-text-muted);
+}
+
+.order-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 8px 25px rgba(99, 102, 241, 0.15);
 }
 
 .order-item-food,
@@ -25,11 +34,18 @@
 }
 
 .order-item select {
-    background-color: #ffe8e4;
-    border: 1px solid tomato;
+    background-color: var(--bg-color);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
     width: max(10vw, 120px);
     padding: 10px;
     outline: none;
+    transition: 0.3s;
+}
+
+.order-item select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
 @media (max-width: 1000px) {
