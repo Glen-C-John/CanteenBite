@@ -3,6 +3,7 @@ import './Add.css'
 import { assets } from'../../assets/assets'
 import axios from "axios"
 import { toast } from 'react-toastify'
+import { motion } from 'framer-motion'
 
 const Add = ({url}) => {
 
@@ -45,7 +46,12 @@ const Add = ({url}) => {
     }
 
   return (
-    <div className='add'>
+    <motion.div 
+      className='add'
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <form className="flex-col" onSubmit={onSubmitHandler}>
         <div className="add-img-upload flex-col">
           <p>Upload Image</p>
@@ -83,7 +89,7 @@ const Add = ({url}) => {
         </div>
         <button type='submit' className='add-btn'>ADD</button>
       </form>
-    </div>
+    </motion.div>
   )
 }
 
