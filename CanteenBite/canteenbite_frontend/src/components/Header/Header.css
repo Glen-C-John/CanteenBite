@@ -1,9 +1,18 @@
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
 .header{
     height:34vw;
     margin: 30px auto;
-    background: url('/header_img.png') no-repeat;
+    background: url('../../assets/header_img.png') no-repeat;
     background-size: contain;
     position: relative;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    border-radius: 20px;
+    animation: float 6s ease-in-out infinite;
 }
 
 .header-contents{
@@ -31,12 +40,21 @@
 
 .header-contents button{
     border: none;
-    color: #747474;
-    font-weight: 500;
+    color: var(--color-primary);
+    font-weight: 600;
     padding: 1vw 2.3vw;
     background-color: white;
     font-size: max(1vw,13px);
     border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.header-contents button:hover{
+    background-color: var(--bg-color);
+    transform: translateY(-2px);
+    box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width:1050px) {
