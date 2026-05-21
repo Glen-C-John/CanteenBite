@@ -7,9 +7,20 @@
   font-family: Outfit;
 }
 
+:root {
+  --color-primary: #6366F1;
+  --color-secondary: #8B5CF6;
+  --bg-color: #F3F4F6;
+  --color-text: #1F2937;
+  --color-text-muted: #6B7280;
+}
+
 body{
   min-height: 100vh;
-  background-color: #fcfcfc;
+  background-color: var(--bg-color);
+  background-image: radial-gradient(circle at top right, rgba(139, 92, 246, 0.08), transparent 500px),
+                    radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.08), transparent 500px);
+  color: var(--color-text);
 }
 
 a{
@@ -20,7 +31,7 @@ a{
 hr{
   border: none;
   height: 1px;
-  background-color: #a9a9a9;
+  background-color: rgba(0,0,0,0.1);
 }
 
 .app-content{
