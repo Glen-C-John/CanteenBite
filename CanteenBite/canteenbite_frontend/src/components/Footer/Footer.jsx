@@ -15,15 +15,7 @@ const Footer = () => {
                     <img src={assets.linkedin_icon} alt="" />
                 </div>
             </div>
-            <div className="footer-content-center">
-                <h2>COMPANY</h2>
-                <ul>
-                    <li>Home</li>
-                    <li>About us</li>
-                    <li>Privacy policy</li>
-                    <li></li>
-                </ul>
-            </div>
+
             <div className="footer-content-right">
                 <h2>GET IN TOUCH</h2>
                 <ul>
@@ -33,7 +25,7 @@ const Footer = () => {
             </div>
         </div>
         <hr />
-        <p className="footer-copyright">Copyright 2024 © Tomato.com - All Right Reserved.</p>
+        <p className="footer-copyright">Copyright 2024 © CanteenBite.com - All Right Reserved.</p>
     </div>
   )
 }

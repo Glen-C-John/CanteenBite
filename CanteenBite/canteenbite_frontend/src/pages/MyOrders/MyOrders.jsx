@@ -45,7 +45,7 @@ const MyOrders = () => {
                                     return item.name + " x " + item.quantity + ", ";
                                 }
                             })}</p>
-                            <p>${order.amount}.00</p>
+                            <p>₹{order.amount}.00</p>
                             <div>
                                 <p>Items: {order.items.length}</p>
                                 {order.otp && <p style={{marginTop: '8px', color: 'var(--color-primary)'}}><b>Code: {order.otp}</b></p>}
