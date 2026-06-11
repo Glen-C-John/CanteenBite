@@ -30,6 +30,16 @@ const List = ({url}) => {
       }
     }
 
+    const toggleAvailability = async (id, currentStatus) => {
+      const response = await axios.post(`${url}/api/food/availability`, {id, available: !currentStatus});
+      if(response.data.success){
+        toast.success(response.data.message);
+        await fetchList();
+      } else {
+        toast.error("Error");
+      }
+    }
+
     useEffect(()=>{
       fetchList();
     },[])
@@ -43,6 +53,7 @@ const List = ({url}) => {
           <b>Name</b>
           <b>Category</b>
           <b>Price</b>
+          <b>Available</b>
           <b>Action</b>
         </div>
         {list.map((item,index)=>{
@@ -58,6 +69,9 @@ const List = ({url}) => {
               <p>{item.name}</p>
               <p>{item.category}</p>
               <p>₹{item.price}</p>
+              <p>
+                <input type="checkbox" checked={item.available !== false} onChange={() => toggleAvailability(item._id, item.available !== false)} />
+              </p>
               <p onClick={()=>removeFood(item._id)} className='cursor'>X</p>
               </motion.div>
             )
