@@ -9,15 +9,7 @@ const PlaceOrder = () => {
     const { getTotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext);
     
     const [data, setData] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        street: "",
-        city: "",
-        state: "",
-        zipcode: "",
-        country: "",
-        phone: ""
+        pickupTime: "12:00 PM"
     });
 
     const navigate = useNavigate();
@@ -43,7 +35,7 @@ const PlaceOrder = () => {
         let orderData = {
             address: data,
             items: orderItems,
-            amount: getTotalCartAmount() + 2, 
+            amount: getTotalCartAmount(), 
         }
         
         let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } });
@@ -72,22 +64,22 @@ const PlaceOrder = () => {
             transition={{ duration: 0.5 }}
         >
             <div className="place-order-left">
-                <p className="title">Delivery Information</p>
+                <p className="title">Pickup Information</p>
                 <div className="multi-fields">
-                    <input required name='firstName' onChange={onChangeHandler} value={data.firstName} type="text" placeholder='First name' />
-                    <input required name='lastName' onChange={onChangeHandler} value={data.lastName} type="text" placeholder='Last name' />
+                    <select required name='pickupTime' onChange={onChangeHandler} value={data.pickupTime} style={{width: '100%', padding: '10px', marginTop: '10px', border: '1px solid #c5c5c5', borderRadius: '4px'}}>
+                        <option value="12:00 PM">12:00 PM</option>
+                        <option value="12:15 PM">12:15 PM</option>
+                        <option value="12:30 PM">12:30 PM</option>
+                        <option value="12:45 PM">12:45 PM</option>
+                        <option value="1:00 PM">1:00 PM</option>
+                        <option value="1:15 PM">1:15 PM</option>
+                        <option value="1:30 PM">1:30 PM</option>
+                        <option value="1:45 PM">1:45 PM</option>
+                        <option value="2:00 PM">2:00 PM</option>
+                        <option value="2:15 PM">2:15 PM</option>
+                        <option value="2:30 PM">2:30 PM</option>
+                    </select>
                 </div>
-                <input required name='email' onChange={onChangeHandler} value={data.email} type="email" placeholder='Email address' />
-                <input required name='street' onChange={onChangeHandler} value={data.street} type="text" placeholder='Street' />
-                <div className="multi-fields">
-                    <input required name='city' onChange={onChangeHandler} value={data.city} type="text" placeholder='City' />
-                    <input required name='state' onChange={onChangeHandler} value={data.state} type="text" placeholder='State' />
-                </div>
-                <div className="multi-fields">
-                    <input required name='zipcode' onChange={onChangeHandler} value={data.zipcode} type="text" placeholder='Zip code' />
-                    <input required name='country' onChange={onChangeHandler} value={data.country} type="text" placeholder='Country' />
-                </div>
-                <input required name='phone' onChange={onChangeHandler} value={data.phone} type="text" placeholder='Phone' />
             </div>
             
             <div className="place-order-right">
@@ -98,15 +90,9 @@ const PlaceOrder = () => {
                             <p>Subtotal</p>
                             <p>${getTotalCartAmount()}</p>
                         </div>
-                        <hr />
-                        <div className="cart-total-details">
-                            <p>Delivery Fee</p>
-                            <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
-                        </div>
-                        <hr />
                         <div className="cart-total-details">
                             <b>Total</b>
-                            <b>${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}</b>
+                            <b>${getTotalCartAmount()}</b>
                         </div>
                     </div>
                     <button type='submit'>PROCEED TO PAYMENT</button>

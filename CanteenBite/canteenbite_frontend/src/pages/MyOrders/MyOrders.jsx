@@ -9,9 +9,12 @@ const MyOrders = () => {
     const { url, token } = useContext(StoreContext);
     const [data, setData] = useState([]);
 
-    const fetchOrders = async () => {
+    const fetchOrders = async (showToast = false) => {
         const response = await axios.post(url + "/api/order/userorders", {}, { headers: { token } });
         setData(response.data.data);
+        if (showToast === true) {
+            alert("Order statuses successfully refreshed!");
+        }
     }
 
     useEffect(() => {
@@ -43,10 +46,13 @@ const MyOrders = () => {
                                 }
                             })}</p>
                             <p>${order.amount}.00</p>
-                            <p>Items: {order.items.length}</p>
+                            <div>
+                                <p>Items: {order.items.length}</p>
+                                {order.otp && <p style={{marginTop: '8px', color: 'var(--color-primary)'}}><b>Code: {order.otp}</b></p>}
+                            </div>
                             <p><span>&#x25cf;</span> <b>{order.status}</b></p>
                             {/* Re-fetches the orders to update the status without reloading the page */}
-                            <button onClick={fetchOrders}>Track Order</button>
+                            <button onClick={() => fetchOrders(true)}>Track Order</button>
                         </motion.div>
                     )
                 })}
