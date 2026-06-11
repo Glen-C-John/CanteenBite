@@ -23,7 +23,7 @@
 
 import express from "express";
 import multer from "multer";
-import { addFood,listFood,removeFood } from "../controllers/foodController.js";
+import { addFood, listFood, removeFood, updateAvailability, streamFood } from "../controllers/foodController.js";
 
 const foodRouter = express.Router();
 
@@ -41,6 +41,8 @@ const upload = multer({ storage });
 foodRouter.post("/add", upload.single('image'), addFood);
 foodRouter.get("/list",listFood)
 foodRouter.post("/remove",removeFood);
+foodRouter.get("/stream", streamFood);
+foodRouter.post("/availability", updateAvailability);
 
 export default foodRouter;
 
