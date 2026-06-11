@@ -81,6 +81,24 @@ const StoreContextProvider = (props) => {
             }
         }
         loadData();
+
+        // Setup SSE for real-time updates
+        const eventSource = new EventSource(url + "/api/food/stream");
+        eventSource.onmessage = (event) => {
+            try {
+                const parsedData = JSON.parse(event.data);
+                if (parsedData.success) {
+                    setFoodList(parsedData.data);
+                }
+            } catch (err) {
+                console.log("Error parsing SSE data:", err);
+            }
+        };
+
+        // Cleanup on unmount
+        return () => {
+            eventSource.close();
+        };
     },[])
 
     const contextValue = {
