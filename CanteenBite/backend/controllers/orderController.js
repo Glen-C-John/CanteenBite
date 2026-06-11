@@ -4,16 +4,44 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+let orderClients = [];
+
+const streamOrders = (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+
+    orderClients.push(res);
+
+    req.on('close', () => {
+        orderClients = orderClients.filter(client => client !== res);
+    });
+};
+
+const notifyOrderClients = () => {
+    const data = `data: ${JSON.stringify({ type: 'update' })}\n\n`;
+    orderClients.forEach(client => client.write(data));
+};
+
 // Placing user order for frontend
 const placeOrder = async (req, res) => {
-    const frontend_url = "http://localhost:5173"; // Update if running on a different port
+    const frontend_url = req.headers.origin || "http://localhost:5174"; // Dynamically use the requester's origin
 
     try {
+        const user = await userModel.findById(req.body.userId);
+        const otp = Math.floor(1000 + Math.random() * 9000).toString();
         const newOrder = new orderModel({
             userId: req.body.userId,
             items: req.body.items,
             amount: req.body.amount,
-            address: req.body.address
+            otp: otp,
+            address: {
+                firstName: user.firstName || user.name || "Unknown",
+                lastName: user.lastName || "",
+                phone: user.phone || "Not Provided",
+                pickupTime: req.body.address.pickupTime
+            }
         });
         await newOrder.save();
         await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
@@ -29,16 +57,7 @@ const placeOrder = async (req, res) => {
             quantity: item.quantity
         }));
 
-        line_items.push({
-            price_data: {
-                currency: "inr",
-                product_data: {
-                    name: "Delivery Charges"
-                },
-                unit_amount: 2 * 100 * 80
-            },
-            quantity: 1
-        });
+        // No delivery charges for pickup
 
         const session = await stripe.checkout.sessions.create({
             line_items: line_items,
@@ -46,6 +65,8 @@ const placeOrder = async (req, res) => {
             success_url: `${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
             cancel_url: `${frontend_url}/verify?success=false&orderId=${newOrder._id}`
         });
+
+        notifyOrderClients();
 
         res.json({ success: true, session_url: session.url });
 
@@ -61,6 +82,7 @@ const verifyOrder = async (req, res) => {
     try {
         if (success == "true") {
             await orderModel.findByIdAndUpdate(orderId, { payment: true });
+            notifyOrderClients();
             res.json({ success: true, message: "Paid" });
         } else {
             await orderModel.findByIdAndDelete(orderId);
@@ -75,7 +97,7 @@ const verifyOrder = async (req, res) => {
 // User orders for frontend
 const userOrders = async (req, res) => {
     try {
-        const orders = await orderModel.find({ userId: req.body.userId });
+        const orders = await orderModel.find({ userId: req.body.userId, payment: true });
         res.json({ success: true, data: orders });
     } catch (error) {
         console.log(error);
@@ -98,6 +120,7 @@ const listOrders = async (req, res) => {
 const updateStatus = async (req, res) => {
     try {
         await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status });
+        notifyOrderClients();
         res.json({ success: true, message: "Status Updated" });
     } catch (error) {
         console.log(error);
@@ -105,4 +128,23 @@ const updateStatus = async (req, res) => {
     }
 }
 
-export { placeOrder, verifyOrder, userOrders, listOrders, updateStatus }
+// Verify OTP and set status to Delivered
+const verifyOrderOtp = async (req, res) => {
+    try {
+        const { orderId, otp } = req.body;
+        const order = await orderModel.findById(orderId);
+        if (order.otp === otp) {
+            order.status = "Delivered";
+            await order.save();
+            notifyOrderClients();
+            res.json({ success: true, message: "Order Delivered" });
+        } else {
+            res.json({ success: false, message: "Invalid OTP" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+export { placeOrder, verifyOrder, userOrders, listOrders, updateStatus, streamOrders, verifyOrderOtp }

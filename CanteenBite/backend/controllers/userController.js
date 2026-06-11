@@ -33,7 +33,7 @@ const loginUser =async(req,res)=>{
 //register user
 
 const registerUser = async(req,res)=>{
-    const{name,password,email}=req.body;
+    const{firstName,lastName,phone,password,email}=req.body;
     try{
         //checking if user already present
         const exist = await userModel.findOne({email});
@@ -51,7 +51,9 @@ const registerUser = async(req,res)=>{
         const salt =await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password,salt);
         const newUser = new userModel({
-            name:name,
+            firstName:firstName,
+            lastName:lastName,
+            phone:phone,
             email:email,
             password:hashedPassword,
         })

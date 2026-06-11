@@ -27,6 +27,30 @@ export {addFood}*/
 import foodModel from "../models/foodModel.js";
 import fs from 'fs'
 
+let clients = [];
+
+const notifyClients = async () => {
+    try {
+        const foods = await foodModel.find({});
+        const data = `data: ${JSON.stringify({ success: true, data: foods })}\n\n`;
+        clients.forEach(client => client.write(data));
+    } catch (error) {
+        console.error("Error notifying clients", error);
+    }
+};
+
+const streamFood = (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    clients.push(res);
+
+    req.on('close', () => {
+        clients = clients.filter(client => client !== res);
+    });
+};
+
 const addFood = async (req, res) => {
     // Trim whitespace from request body fields
     const name = req.body['name']?.trim(); // Note the space before 'name'
@@ -53,6 +77,7 @@ const addFood = async (req, res) => {
 
     try {
         await food.save();
+        await notifyClients();
         res.json({ success: true, message: "Food added successfully" });
     } catch (error) {
         console.error(error);
@@ -78,6 +103,7 @@ const removeFood = async (req,res) =>{
         const food=await foodModel.findById(req.body.id);
         fs.unlink(`uploads/${food.image}`,()=>{})
         await foodModel.findByIdAndDelete(req.body.id);
+        await notifyClients();
         res.json({success:true,message:"food removed"})
 }catch(error){
         console.log(error);
@@ -85,4 +111,16 @@ const removeFood = async (req,res) =>{
     }
 }
 
-export { addFood ,listFood,removeFood};
+const updateAvailability = async (req, res) => {
+    try {
+        const { id, available } = req.body;
+        await foodModel.findByIdAndUpdate(id, { available });
+        await notifyClients();
+        res.json({ success: true, message: "Availability updated" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error updating availability" });
+    }
+}
+
+export { addFood, listFood, removeFood, updateAvailability, streamFood };
