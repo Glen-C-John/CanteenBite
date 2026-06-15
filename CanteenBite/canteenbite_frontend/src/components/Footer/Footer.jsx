@@ -3,31 +3,31 @@ import './Footer.css'
 import { assets } from '../../assets/assets'
 
 const Footer = () => {
-  return (
-    <div className='footer' id='footer'>
-        <div className="footer-content">
-            <div className="footer-content-left">
-                <h1>CanteenBites</h1>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt repellendus placeat quo facilis atque ab assumenda perferendis, repudiandae aspernatur ad magni deserunt officia aliquam rem quae, aperiam cupiditate quisquam. Ipsa?</p>
-                <div className="footer-social-icons">
-                    <img src={assets.facebook_icon} alt="" />
-                    <img src={assets.twitter_icon} alt="" />
-                    <img src={assets.linkedin_icon} alt="" />
+    return (
+        <div className='footer' id='footer'>
+            <div className="footer-content">
+                <div className="footer-content-left">
+                    <h1>CanteenBites</h1>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt repellendus placeat quo facilis atque ab assumenda perferendis, repudiandae aspernatur ad magni deserunt officia aliquam rem quae, aperiam cupiditate quisquam. Ipsa?</p>
+                    <div className="footer-social-icons">
+                        <img src={assets.facebook_icon} alt="" />
+                        <img src={assets.twitter_icon} alt="" />
+                        <img src={assets.linkedin_icon} alt="" />
+                    </div>
+                </div>
+
+                <div className="footer-content-right">
+                    <h2>GET IN TOUCH</h2>
+                    <ul>
+                        <li>+919769022326</li>
+                        <li>contact@canteenbite.com</li>
+                    </ul>
                 </div>
             </div>
-
-            <div className="footer-content-right">
-                <h2>GET IN TOUCH</h2>
-                <ul>
-                    <li>+919769022326</li>
-                    <li>contact@canteenbite.com</li>
-                </ul>
-            </div>
+            <hr />
+            <p className="footer-copyright">Copyright 2024 © CanteenBite.com - All Right Reserved.</p>
         </div>
-        <hr />
-        <p className="footer-copyright">Copyright 2024 © CanteenBite.com - All Right Reserved.</p>
-    </div>
-  )
+    )
 }
 
 export default Footer

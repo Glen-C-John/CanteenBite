@@ -29,8 +29,8 @@ const MyOrders = () => {
             <div className="container">
                 {data.map((order, index) => {
                     return (
-                        <motion.div 
-                            key={index} 
+                        <motion.div
+                            key={index}
                             className='my-orders-order'
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -48,7 +48,7 @@ const MyOrders = () => {
                             <p>₹{order.amount}.00</p>
                             <div>
                                 <p>Items: {order.items.length}</p>
-                                {order.otp && <p style={{marginTop: '8px', color: 'var(--color-primary)'}}><b>Code: {order.otp}</b></p>}
+                                {order.otp && <p style={{ marginTop: '8px', color: 'var(--color-primary)' }}><b>Code: {order.otp}</b></p>}
                             </div>
                             <p><span>&#x25cf;</span> <b>{order.status}</b></p>
                             {/* Re-fetches the orders to update the status without reloading the page */}

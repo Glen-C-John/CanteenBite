@@ -49,13 +49,13 @@ const Orders = ({ url }) => {
       const response = await axios.post(url + "/api/order/verify-otp", { orderId, otp });
       if (response.data.success) {
         toast.success("Order verified and marked as delivered");
-        setOtpInputs(prev => ({...prev, [orderId]: ""}));
+        setOtpInputs(prev => ({ ...prev, [orderId]: "" }));
         await fetchAllOrders();
       } else {
         toast.error(response.data.message || "Invalid OTP");
-        setOtpErrors(prev => ({...prev, [orderId]: true}));
+        setOtpErrors(prev => ({ ...prev, [orderId]: true }));
         setTimeout(() => {
-          setOtpErrors(prev => ({...prev, [orderId]: false}));
+          setOtpErrors(prev => ({ ...prev, [orderId]: false }));
         }, 2000);
       }
     } catch (error) {
@@ -68,16 +68,16 @@ const Orders = ({ url }) => {
     fetchAllOrders();
 
     const eventSource = new EventSource(url + "/api/order/stream");
-    
+
     eventSource.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === 'update') {
-            fetchAllOrders();
-        }
+      const data = JSON.parse(event.data);
+      if (data.type === 'update') {
+        fetchAllOrders();
+      }
     };
-    
+
     return () => {
-        eventSource.close();
+      eventSource.close();
     };
   }, [])
 
@@ -86,8 +86,8 @@ const Orders = ({ url }) => {
       <h3>Order Page</h3>
       <div className="order-list">
         {orders.filter(order => order.status !== "Delivered").map((order, index) => (
-          <motion.div 
-            key={index} 
+          <motion.div
+            key={index}
             className='order-item'
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -112,7 +112,7 @@ const Orders = ({ url }) => {
               </p>
 
               <div className="order-item-address">
-                <p style={{fontWeight: "bold", color: "#e84c4f"}}>Pickup Time: {order.address?.pickupTime || "ASAP"}</p>
+                <p style={{ fontWeight: "bold", color: "#e84c4f" }}>Pickup Time: {order.address?.pickupTime || "ASAP"}</p>
               </div>
               <p className='order-item-phone'>{order.address?.phone || "No Phone"}</p>
             </div>
@@ -125,17 +125,17 @@ const Orders = ({ url }) => {
               <option value="Ready for Pickup">Ready for Pickup</option>
               <option value="Picked Up">Picked Up</option>
             </select>
-            
+
             <div className="otp-verification" style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-              <input 
-                type="text" 
-                placeholder="4-digit code" 
+              <input
+                type="text"
+                placeholder="4-digit code"
                 value={otpInputs[order._id] || ""}
-                onChange={(e) => setOtpInputs(prev => ({...prev, [order._id]: e.target.value}))}
+                onChange={(e) => setOtpInputs(prev => ({ ...prev, [order._id]: e.target.value }))}
                 maxLength={4}
-                style={{ 
-                  padding: '8px', 
-                  borderRadius: '4px', 
+                style={{
+                  padding: '8px',
+                  borderRadius: '4px',
                   border: otpErrors[order._id] ? '2px solid red' : '1px solid #ccc',
                   outline: 'none',
                   backgroundColor: otpErrors[order._id] ? '#ffe6e6' : 'white',
@@ -143,7 +143,7 @@ const Orders = ({ url }) => {
                   width: '100%'
                 }}
               />
-              <button 
+              <button
                 onClick={() => verifyHandler(order._id)}
                 style={{
                   padding: '8px',

@@ -1,0 +1,66 @@
+name: Continuous Deployment Pipeline - Backend Container
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  build-and-ship:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, Tag, and Push Image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+          ECR_REPOSITORY: canteen-backend
+          IMAGE_TAG: latest
+        run: |
+          # Build the container passing the context directly to your backend folder
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
+          # Push the compiled image into your private cloud registry
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Execute Remote Deployment via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # 1. Authenticate local Docker daemon to ECR via your hardware IAM role
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+            
+            # 2. Safely halt and clear out the old container version if running
+            docker stop canteen-backend-container || true
+            docker rm canteen-backend-container || true
+            
+            # 3. Pull down the fresh image architecture
+            docker pull ${{ secrets.ECR_REGISTRY }}/canteen-backend:latest
+            
+            # 4. Spin up the new container running isolated in the background
+            docker run -d \
+              --name canteen-backend-container \
+              -p 4000:4000 \
+              -e MONGO_URI=${{ secrets.MONGO_URI }} \
+              -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
+              -e STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }} \
+              -e FRONTEND_URL=${{ secrets.FRONTEND_URL }} \
+              --restart always \
+              ${{ secrets.ECR_REGISTRY }}/canteen-backend:latest

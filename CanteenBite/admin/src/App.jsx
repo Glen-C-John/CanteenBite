@@ -11,20 +11,20 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
 
-  const url = "http://localhost:4000"
+  const url = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
   return (
     <div>
-      <ToastContainer/>
-      <Navbar/>
+      <ToastContainer />
+      <Navbar />
       <hr />
       <div className="app-content">
-        <Sidebar/>
+        <Sidebar />
         <Routes>
           <Route path="/" element={<Navigate to="/add" />} />
-          <Route path='/add' element = {<Add url = {url}/>}/>
-          <Route path='/list' element = {<List url = {url}/>}/>
-          <Route path='/orders' element = {<Orders url = {url}/>}/>
+          <Route path='/add' element={<Add url={url} />} />
+          <Route path='/list' element={<List url={url} />} />
+          <Route path='/orders' element={<Orders url={url} />} />
         </Routes>
       </div>
     </div>

@@ -26,7 +26,7 @@ const notifyOrderClients = () => {
 
 // Placing user order for frontend
 const placeOrder = async (req, res) => {
-    const frontend_url = req.headers.origin || "http://localhost:5174"; // Dynamically use the requester's origin
+    const frontend_url = process.env.FRONTEND_URL || "http://localhost:5174"; // Dynamically use the requester's origin
 
     try {
         const user = await userModel.findById(req.body.userId);
