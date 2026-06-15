@@ -32,7 +32,7 @@ jobs:
           IMAGE_TAG: latest
         run: |
           # Build the container passing the context directly to your backend folder
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./CanteenBite/backend
           # Push the compiled image into your private cloud registry
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
