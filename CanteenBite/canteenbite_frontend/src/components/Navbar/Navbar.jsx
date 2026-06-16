@@ -93,7 +93,7 @@ const Navbar = ({ setShowLogin }) => {
                                             onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'}
                                             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'white'}
                                         >
-                                            <img src={url + "/images/" + item.image} alt={item.name} style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />
+                                            <img src={item.image.startsWith('http') ? item.image : url + "/images/" + item.image} alt={item.name} style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />
                                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                                 <span style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{item.name}</span>
                                                 <span style={{ fontSize: '12px', color: 'var(--color-primary)' }}>₹{item.price}</span>
