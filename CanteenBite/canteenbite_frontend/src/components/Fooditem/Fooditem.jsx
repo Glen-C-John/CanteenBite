@@ -12,7 +12,7 @@ const Fooditem = ({id,name,price,description,image}) => {
   return (
     <div className={`food-item ${!isAvailable ? 'sold-out' : ''}`}>
         <div className="food-item-img-container">
-            <img className='food-item-image' src={image.startsWith('http') ? image : url+"/images/"+image} alt="" />
+            <img className='food-item-image' src={url+"/images/"+image} alt="" />
             {!isAvailable ? (
                 <div className="sold-out-badge">Sold Out</div>
             ) : (

@@ -65,7 +65,7 @@ const List = ({url}) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
               >
-              <img src={item.image.startsWith('http') ? item.image : `${url}/images/`+item.image} alt="" />
+              <img src={`${url}/images/`+item.image} alt="" />
               <p>{item.name}</p>
               <p>{item.category}</p>
               <p>₹{item.price}</p>

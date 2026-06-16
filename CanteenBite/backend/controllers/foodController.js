@@ -51,8 +51,6 @@ const streamFood = (req, res) => {
     });
 };
 
-import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
-
 const addFood = async (req, res) => {
     // Trim whitespace from request body fields
     const name = req.body['name']?.trim(); // Note the space before 'name'
@@ -67,22 +65,14 @@ const addFood = async (req, res) => {
         return res.status(400).json({ success: false, message: "Missing required fields" });
     }
 
-    let image_url = 'default.jpg';
-    if (req.file) {
-        if (process.env.NODE_ENV === 'production') {
-            image_url = req.file.location;
-        } else {
-            const port = process.env.PORT || 4000;
-            image_url = `http://localhost:${port}/images/${req.file.filename}`;
-        }
-    }
+    const image_filename = req.file ? req.file.filename : 'default.jpg';
 
     const food = new foodModel({
         name,
         description,
         price,
         category,
-        image: image_url,
+        image: image_filename,
     });
 
     try {
@@ -111,27 +101,7 @@ const listFood = async (req,res) =>{
 const removeFood = async (req,res) =>{
     try{
         const food=await foodModel.findById(req.body.id);
-        
-        if (food.image && food.image !== 'default.jpg') {
-            const filename = food.image.split('/').pop();
-            
-            if (process.env.NODE_ENV === 'production') {
-                const s3 = new S3Client({
-                    region: process.env.AWS_REGION,
-                    credentials: {
-                        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-                    }
-                });
-                await s3.send(new DeleteObjectCommand({
-                    Bucket: process.env.AWS_BUCKET_NAME,
-                    Key: filename
-                }));
-            } else {
-                fs.unlink(`uploads/${filename}`,()=>{})
-            }
-        }
-
+        fs.unlink(`uploads/${food.image}`,()=>{})
         await foodModel.findByIdAndDelete(req.body.id);
         await notifyClients();
         res.json({success:true,message:"food removed"})

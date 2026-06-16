@@ -37,7 +37,7 @@ const Cart = () => {
                 transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <div className="cart-items-title cart-items-item">
-                  <img src={item.image.startsWith('http') ? item.image : url+"/images/"+item.image} alt="" />
+                  <img src={url+"/images/"+item.image} alt="" />
                   <p>{item.name}</p>
                   <p>₹{item.price}</p>
                   <p>{cartItems[item._id]}</p>
