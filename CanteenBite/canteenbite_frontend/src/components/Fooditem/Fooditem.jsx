@@ -9,10 +9,16 @@ const Fooditem = ({id,name,price,description,image}) => {
     const item = food_list.find(f => f._id === id);
     const isAvailable = item ? item.available !== false : true;
 
+    const renderImageUrl = (imageName) => {
+        if (!imageName) return "/default.jpg";
+        if (imageName.startsWith("http")) return imageName;
+        return `${url}/images/${imageName}`;
+    };
+
   return (
     <div className={`food-item ${!isAvailable ? 'sold-out' : ''}`}>
         <div className="food-item-img-container">
-            <img className='food-item-image' src={url+"/images/"+image} alt="" />
+            <img className='food-item-image' src={renderImageUrl(image)} alt="" />
             {!isAvailable ? (
                 <div className="sold-out-badge">Sold Out</div>
             ) : (

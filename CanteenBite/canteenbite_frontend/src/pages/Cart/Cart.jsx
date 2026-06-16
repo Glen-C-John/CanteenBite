@@ -9,6 +9,12 @@ const Cart = () => {
   const { cartItems, food_list, removeFromCart, getTotalCartAmount,url } = useContext(StoreContext);
   const navigate = useNavigate();
 
+  const renderImageUrl = (imageName) => {
+      if (!imageName) return "/default.jpg";
+      if (imageName.startsWith("http")) return imageName;
+      return `${url}/images/${imageName}`;
+  };
+
   return (
     <motion.div 
       className='cart'
@@ -37,7 +43,7 @@ const Cart = () => {
                 transition={{ duration: 0.3, delay: index * 0.05 }}
               >
                 <div className="cart-items-title cart-items-item">
-                  <img src={url+"/images/"+item.image} alt="" />
+                  <img src={renderImageUrl(item.image)} alt="" />
                   <p>{item.name}</p>
                   <p>₹{item.price}</p>
                   <p>{cartItems[item._id]}</p>

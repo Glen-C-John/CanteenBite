@@ -44,6 +44,18 @@ const List = ({url}) => {
       fetchList();
     },[])
 
+    const renderImageUrl = (imageName) => {
+        if (!imageName) return "/default.jpg";
+        
+        // If the database string starts with http, it's a direct cloud asset from S3
+        if (imageName.startsWith("http")) {
+            return imageName;
+        }
+        
+        // Fallback for local development environment images
+        return `${url}/images/${imageName}`;
+    };
+
   return (
     <div className='list add flex-col'>
       <p>All Foods List</p>
@@ -65,7 +77,7 @@ const List = ({url}) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
               >
-              <img src={`${url}/images/`+item.image} alt="" />
+              <img src={renderImageUrl(item.image)} alt="" />
               <p>{item.name}</p>
               <p>{item.category}</p>
               <p>₹{item.price}</p>

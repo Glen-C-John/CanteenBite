@@ -34,7 +34,7 @@ app.use(cors({
     },
     credentials: true, // Required if your frontend sends tokens or cookies
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'token']
 }));
 
 //DB connection

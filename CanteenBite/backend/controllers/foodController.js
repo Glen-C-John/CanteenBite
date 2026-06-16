@@ -25,7 +25,19 @@ const addFood = async (req,res) =>{
 export {addFood}*/
 
 import foodModel from "../models/foodModel.js";
-import fs from 'fs'
+import fs from 'fs';
+import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
+
+let s3Client;
+if (process.env.AWS_S3_BUCKET_NAME) {
+    s3Client = new S3Client({
+        region: process.env.AWS_REGION,
+        credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        }
+    });
+}
 
 let clients = [];
 
@@ -65,7 +77,11 @@ const addFood = async (req, res) => {
         return res.status(400).json({ success: false, message: "Missing required fields" });
     }
 
-    const image_filename = req.file ? req.file.filename : 'default.jpg';
+    // If uploaded to S3, req.file.location holds the full absolute URL string.
+    // If uploaded locally, fallback to the filename string.
+    const image_filename = req.file 
+        ? (req.file.location || req.file.filename) 
+        : 'default.jpg';
 
     const food = new foodModel({
         name,
@@ -101,7 +117,18 @@ const listFood = async (req,res) =>{
 const removeFood = async (req,res) =>{
     try{
         const food=await foodModel.findById(req.body.id);
-        fs.unlink(`uploads/${food.image}`,()=>{})
+        if (process.env.AWS_S3_BUCKET_NAME && s3Client) {
+            try {
+                await s3Client.send(new DeleteObjectCommand({
+                    Bucket: process.env.AWS_S3_BUCKET_NAME,
+                    Key: food.image
+                }));
+            } catch (s3Err) {
+                console.error("Error deleting from S3:", s3Err);
+            }
+        }
+        // Also attempt to delete locally just in case it's a legacy file
+        fs.unlink(`uploads/${food.image}`, () => {});
         await foodModel.findByIdAndDelete(req.body.id);
         await notifyClients();
         res.json({success:true,message:"food removed"})

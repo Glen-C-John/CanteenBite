@@ -13,6 +13,12 @@ const Navbar = ({ setShowLogin }) => {
 
     const navigate = useNavigate();
 
+    const renderImageUrl = (imageName) => {
+        if (!imageName) return "/default.jpg";
+        if (imageName.startsWith("http")) return imageName;
+        return `${url}/images/${imageName}`;
+    };
+
     const filteredFoods = food_list ? food_list.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
     ) : [];
@@ -93,7 +99,7 @@ const Navbar = ({ setShowLogin }) => {
                                             onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f9f9f9'}
                                             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'white'}
                                         >
-                                            <img src={url + "/images/" + item.image} alt={item.name} style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />
+                                            <img src={renderImageUrl(item.image)} alt={item.name} style={{ width: '40px', height: '40px', borderRadius: '4px', objectFit: 'cover' }} />
                                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                                 <span style={{ fontSize: '14px', fontWeight: '500', color: '#333' }}>{item.name}</span>
                                                 <span style={{ fontSize: '12px', color: 'var(--color-primary)' }}>₹{item.price}</span>
