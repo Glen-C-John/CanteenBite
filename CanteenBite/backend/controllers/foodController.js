@@ -55,10 +55,22 @@ const streamFood = (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
+    
+    // 1. Tell AWS proxies (CloudFront/Nginx) NOT to buffer the stream
+    res.setHeader('X-Accel-Buffering', 'no'); 
 
     clients.push(res);
 
+    // 2. The Heartbeat: Send an invisible ping every 20 seconds
+    const heartbeat = setInterval(() => {
+        // Sending a colon (:) is an SSE comment. 
+        // The browser ignores it, but CloudFront sees traffic and keeps the connection alive.
+        res.write(':\n\n'); 
+    }, 20000); 
+
+    // 3. Cleanup: Stop the heartbeat when the user closes the tab
     req.on('close', () => {
+        clearInterval(heartbeat);
         clients = clients.filter(client => client !== res);
     });
 };
