@@ -70,9 +70,13 @@ const Orders = ({ url }) => {
     const eventSource = new EventSource(url + "/api/order/stream");
 
     eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === 'update') {
-        fetchAllOrders();
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'update') {
+          fetchAllOrders();
+        }
+      } catch (err) {
+        console.error("Error parsing SSE data:", err);
       }
     };
 
