@@ -10,10 +10,11 @@ const streamOrders = (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
-    
+
     // 1. Tell AWS proxies (CloudFront/Nginx) NOT to buffer the stream
     res.setHeader('X-Accel-Buffering', 'no');
+
+    res.flushHeaders();
 
     orderClients.push(res);
 
@@ -23,13 +24,13 @@ const streamOrders = (req, res) => {
             if (!res.writableEnded) {
                 // Sending a colon (:) is an SSE comment. 
                 // The browser ignores it, but CloudFront sees traffic and keeps the connection alive.
-                res.write(':\\n\\n'); 
+                res.write(':\\n\\n');
             }
         } catch (err) {
             console.error("Heartbeat error", err);
             clearInterval(heartbeat);
         }
-    }, 20000); 
+    }, 20000);
 
     // 3. Cleanup: Stop the heartbeat when the user closes the tab
     req.on('close', () => {
