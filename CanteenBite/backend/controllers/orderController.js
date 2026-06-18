@@ -13,15 +13,22 @@ const streamOrders = (req, res) => {
     res.flushHeaders();
     
     // 1. Tell AWS proxies (CloudFront/Nginx) NOT to buffer the stream
-    res.setHeader('X-Accel-Buffering', 'no'); 
+    res.setHeader('X-Accel-Buffering', 'no');
 
     orderClients.push(res);
 
     // 2. The Heartbeat: Send an invisible ping every 20 seconds
     const heartbeat = setInterval(() => {
-        // Sending a colon (:) is an SSE comment. 
-        // The browser ignores it, but CloudFront sees traffic and keeps the connection alive.
-        res.write(':\n\n'); 
+        try {
+            if (!res.writableEnded) {
+                // Sending a colon (:) is an SSE comment. 
+                // The browser ignores it, but CloudFront sees traffic and keeps the connection alive.
+                res.write(':\\n\\n'); 
+            }
+        } catch (err) {
+            console.error("Heartbeat error", err);
+            clearInterval(heartbeat);
+        }
     }, 20000); 
 
     // 3. Cleanup: Stop the heartbeat when the user closes the tab

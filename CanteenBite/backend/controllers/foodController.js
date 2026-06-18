@@ -63,9 +63,16 @@ const streamFood = (req, res) => {
 
     // 2. The Heartbeat: Send an invisible ping every 20 seconds
     const heartbeat = setInterval(() => {
-        // Sending a colon (:) is an SSE comment. 
-        // The browser ignores it, but CloudFront sees traffic and keeps the connection alive.
-        res.write(':\n\n'); 
+        try {
+            if (!res.writableEnded) {
+                // Sending a colon (:) is an SSE comment. 
+                // The browser ignores it, but CloudFront sees traffic and keeps the connection alive.
+                res.write(':\\n\\n'); 
+            }
+        } catch (err) {
+            console.error("Heartbeat error", err);
+            clearInterval(heartbeat);
+        }
     }, 20000); 
 
     // 3. Cleanup: Stop the heartbeat when the user closes the tab
