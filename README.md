@@ -19,6 +19,12 @@ Modernizing campus food ordering through a scalable MERN architecture, secure on
 
 ---
 
+## 🌐 Live Demo
+
+- Customer Portal: https://main.d1v3lo75so97c4.amplifyapp.com/
+- Admin Dashboard: https://main.ds2hmh70t7m84.amplifyapp.com/add
+
+
 # 📖 Overview
 
 CanteenBite is a full-stack MERN application designed to streamline college canteen operations by eliminating physical queues and digitizing the entire ordering workflow.
