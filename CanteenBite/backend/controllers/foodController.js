@@ -30,12 +30,14 @@ import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 // Initialize S3 Client
 let s3Client;
-if (process.env.AWS_S3_BUCKET_NAME) {
+const bucketName = process.env.AWS_S3_BUCKET_NAME || process.env.S3_BUCKET_NAME;
+
+if (bucketName) {
     s3Client = new S3Client({
         region: process.env.AWS_REGION,
         credentials: {
-            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.AWS_S3_ACCESS_KEY,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || process.env.AWS_S3_SECRET_KEY,
         }
     });
 }
@@ -159,10 +161,10 @@ const removeFood = async (req, res) => {
     try {
         const food = await foodModel.findById(req.body.id);
 
-        if (process.env.AWS_S3_BUCKET_NAME && s3Client) {
+        if (bucketName && s3Client) {
             try {
                 await s3Client.send(new DeleteObjectCommand({
-                    Bucket: process.env.AWS_S3_BUCKET_NAME,
+                    Bucket: bucketName,
                     Key: food.image
                 }));
             } catch (s3Err) {
