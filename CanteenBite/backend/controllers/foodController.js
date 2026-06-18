@@ -163,9 +163,14 @@ const removeFood = async (req, res) => {
 
         if (bucketName && s3Client) {
             try {
+                // If the image is a full S3 URL, extract just the object key
+                const imageKey = food.image.startsWith("http") 
+                    ? decodeURIComponent(new URL(food.image).pathname.substring(1)) 
+                    : food.image;
+
                 await s3Client.send(new DeleteObjectCommand({
                     Bucket: bucketName,
-                    Key: food.image
+                    Key: imageKey
                 }));
             } catch (s3Err) {
                 console.error("Error deleting from S3:", s3Err);
